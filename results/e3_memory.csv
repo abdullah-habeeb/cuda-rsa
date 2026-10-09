@@ -1,0 +1,4 @@
+key_memory,connections,kernel_ms,throughput_ops_per_s
+global,1024,1503.6959,680.99
+shared,1024,1464.1941,699.36
+constant,1024,1473.8083,694.80

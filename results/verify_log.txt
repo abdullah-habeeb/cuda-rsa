@@ -1,0 +1,16 @@
+
+==================== VERIFY: 1000 messages ====================
+  GPU encryption == CPU encryption (c = m^e mod n)           : PASS (1000/1000 match)
+  GPU decrypt, key in global memory == original              : PASS (1000/1000 match)
+  GPU decrypt, key in shared memory == original              : PASS (1000/1000 match)
+  GPU decrypt, key in constant memory == original            : PASS (1000/1000 match)
+  GPU CRT decrypt == original                                : PASS (1000/1000 match)
+  CPU CRT decrypt == original                                : PASS (1000/1000 match)
+  Round trip with batch size 1 (partial block)               : PASS (1/1 match)
+  Round trip with batch size 31 (partial block)              : PASS (31/31 match)
+  Round trip with batch size 33 (partial block)              : PASS (33/33 match)
+  Round trip with batch size 65 (partial block)              : PASS (65/65 match)
+  Round trip with batch size 257 (partial block)             : PASS (257/257 match)
+  Round trip with batch size 999 (partial block)             : PASS (999/999 match)
+  wrote results/verify_dump.txt (checked independently by tools/verify.py)
+VERIFY RESULT: ALL TESTS PASSED

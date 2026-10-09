@@ -1,0 +1,35 @@
+
+==================== DEMO: 8 simultaneous HTTPS connections ====================
+Server RSA-2048 public key: n = 0xa82895374e5b8566...14e18f81 (2048 bits), e = 65537
+
+(1) Clients encrypt their session keys with the server's PUBLIC key: c = m^e mod n
+  [Step 1] cudaMalloc   : d_in, d_out = 2048 bytes each (8 x 2048-bit numbers)
+  [Step 2] cudaMemcpy H->D: 8 ciphertexts + key (constant memory)
+  [Step 3] kernel rsa_modexp_kernel<<<grid=1, block=64>>> [encrypt] -> 64 threads for 8 connections
+  [Step 4] cudaMemcpy D->H: 8 results
+  [Step 5] cudaFree     : device buffers released
+
+(2) Server decrypts ALL connections at once with its PRIVATE key (CRT): m = c^d mod n
+  [Step 1] cudaMalloc   : d_in, d_out = 2048 bytes each (8 x 2048-bit numbers)
+  [Step 2] cudaMemcpy H->D: 8 ciphertexts + key (constant memory)
+  [Step 3] kernel rsa_crt_kernel<<<grid=1, block=64>>> [decrypt-CRT] -> 64 threads for 8 connections
+  [Step 4] cudaMemcpy D->H: 8 results
+  [Step 5] cudaFree     : device buffers released
+      GPU time: H2D 0.257 ms | kernel 128.498 ms | D2H 0.314 ms
+
+(3) Cross-check with plain (non-CRT) GPU decryption  m = c^d mod n
+
+conn  | ciphertext (first 24 hex)  | decrypted plaintext                                                | check
+------+----------------------------+--------------------------------------------------------------------+------
+    1 | 0ce0d590d6072820afc7a143.. | conn#0001 user=alice session-key=6280938aaad71e7578bc927ddb9c5598  | OK
+    2 | 8425e09949c713d5d78f2d13.. | conn#0002 user=bob session-key=cdf6c4e5f3f8751cb9f5a071caa69c1e    | OK
+    3 | 0485e1d7eafb1f850252ff49.. | conn#0003 user=carol session-key=e6e0d6de55cba8d63ae578fd55b87171  | OK
+    4 | 789c7953fbdb7f50dc29fa04.. | conn#0004 user=dave session-key=28363ce3a4ae3d2c47db765451956284   | OK
+    5 | 5f977efbd483dbcd328f7811.. | conn#0005 user=erin session-key=9584dc7b9f176a0c4fa78ebb3a96fc3f   | OK
+    6 | 91e825a5961b1aa7af63b022.. | conn#0006 user=frank session-key=26ebe2e0afc65da3a6dcb84da2c82239  | OK
+    7 | 90b877de976d0f70b838c8fd.. | conn#0007 user=grace session-key=f834554aa6e19f89714d557d67f723a3  | OK
+    8 | 10d5e7a5c0c721c8e4af6d9c.. | conn#0008 user=heidi session-key=75d68fa47e8c95d7c09a13ebe7014fa2  | OK
+
+Tamper test: flipping 1 bit of ciphertext #1 decrypts to 0x7027451542c163d100621b37587ee8e6...  (garbage, as expected)
+
+DEMO RESULT: 8 / 8 connections decrypted correctly

@@ -1,0 +1,11 @@
+# Linux tools need LF line endings; Windows batch files keep CRLF
+* text=auto
+*.sh text eol=lf
+Makefile text eol=lf
+*.cu text eol=lf
+*.cuh text eol=lf
+*.h text eol=lf
+*.py text eol=lf
+*.ipynb text eol=lf
+*.bat text eol=crlf
+*.png binary

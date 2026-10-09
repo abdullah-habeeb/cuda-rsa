@@ -1,0 +1,4 @@
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                    rsa2048 0.077557s 0.001370s 0.000040s      12.9     729.8   25174.7
+                               keygen     signs    verify keygens/s    sign/s  verify/s
+                    rsa2048 0.027643s 0.000375s 0.000011s      36.2    2663.3   95071.0

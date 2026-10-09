@@ -1,0 +1,2 @@
+connections,gpu_kernel_ms,gpu_e2e_ms,cpu1_ms,cpuN_ms,cpu_threads
+4096,23.1639,37.1849,1297.6949,313.8791,8

@@ -1,0 +1,4 @@
+Independent Python check of 1000 GPU results (RSA-2048):
+  pow(m, e, n) == c_gpu : 1000/1000 PASS
+  pow(c, d, n) == m     : 1000/1000 PASS
+  (Python single-thread time for 1000 decryptions: 115.46 s)

@@ -1,0 +1,14 @@
+# build output
+rsa_cuda
+*.o
+
+# the report and presentation are submitted separately, not part of the code repository
+*.docx
+*.pdf
+*.pptx
+
+# run markers and caches
+results/DONE
+__pycache__/
+*.pyc
+.ipynb_checkpoints/

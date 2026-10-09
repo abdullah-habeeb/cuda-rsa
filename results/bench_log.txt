@@ -1,0 +1,47 @@
+
+==================== BENCHMARKS ====================
+GPU            : NVIDIA GeForce MX250 (compute capability 6.1)
+SMs            : 3, max 2048 threads/SM, 65536 regs/SM, warp size 32
+Clock          : 1582 MHz, global memory 2048 MiB, L2 512 KiB, constant 64 KiB, shared/block 48 KiB
+CUDA           : runtime 11.7, driver supports 11.7
+CPU threads    : 8 (OpenMP enabled)
+Kernel resources (block = 64):
+  rsa_modexp_kernel<Global>          regs/thread=209  local(spill)= 512 B  smem=   0 B  maxThr/blk= 256  block=64 -> 4 blocks/SM = 256 threads/SM (occupancy 12.5%), 768 resident threads on GPU
+  rsa_modexp_kernel<Shared>          regs/thread=211  local(spill)= 512 B  smem= 776 B  maxThr/blk= 256  block=64 -> 4 blocks/SM = 256 threads/SM (occupancy 12.5%), 768 resident threads on GPU
+  rsa_modexp_kernel<Constant>        regs/thread=196  local(spill)= 512 B  smem=   0 B  maxThr/blk= 256  block=64 -> 4 blocks/SM = 256 threads/SM (occupancy 12.5%), 768 resident threads on GPU
+  rsa_crt_kernel                     regs/thread=166  local(spill)= 256 B  smem=   0 B  maxThr/blk= 384  block=64 -> 6 blocks/SM = 384 threads/SM (occupancy 18.8%), 1152 resident threads on GPU
+
+[E1] Decryption time vs. number of simultaneous connections (block=64)
+ conns |     GPU std     GPU CRT |    CPU1 std    CPU1 CRT |    CPU8 std    CPU8 CRT |  GPUcrt e2e  GPUstd e2e
+     1 |    800.48ms    114.71ms |      47.8ms      14.8ms |      52.7ms      19.1ms |    115.30ms    801.08ms
+     8 |    800.49ms    114.75ms |     391.1ms     113.9ms |      96.3ms      33.3ms |    115.48ms    801.32ms
+    32 |    800.21ms    114.83ms |    1901.8ms     707.8ms |     541.3ms     182.3ms |    115.93ms    800.91ms
+    64 |    720.78ms    111.75ms |    3337.9ms     967.4ms |     988.8ms     352.6ms |    112.50ms    721.36ms
+   128 |    789.31ms    111.42ms |    7023.0ms    2252.7ms |    2138.4ms     697.3ms |    111.98ms    798.37ms
+   256 |    827.20ms    112.86ms |   13376.1ms    3781.6ms |    3449.2ms    1116.3ms |    113.67ms    827.82ms
+   384 |    778.45ms    110.07ms |   22133.4ms    5476.9ms |    5559.1ms    1545.5ms |    110.77ms    779.24ms
+   512 |    759.29ms    154.94ms |   25783.5ms    7975.8ms |    7303.6ms    1967.1ms |    156.11ms    760.55ms
+   768 |    644.96ms    131.36ms |   39910.9ms   11799.4ms |   11177.2ms    3265.5ms |    132.27ms    646.91ms
+  1024 |   1477.07ms    177.78ms |   52476.8ms   16039.2ms |   14351.6ms    4849.0ms |    178.66ms   1478.01ms
+  1152 |   1426.57ms    180.49ms |   63757.7ms   17814.4ms |   17304.6ms    4699.2ms |    181.53ms   1428.58ms
+  1536 |   1299.00ms    289.63ms |   85651.9ms   24177.1ms |   23637.4ms    6579.5ms |    290.63ms   1303.79ms
+  2048 |   2059.69ms    356.33ms |  105727.2ms   25772.2ms |   27408.5ms   11125.7ms |    357.69ms   2072.76ms
+
+[E2] Pipeline breakdown @ 2048 connections (CRT): alloc 1.120 | H2D 0.690 | kernel 356.33 | D2H 0.662 | free 0.740 ms
+
+[E3] Where should the key live?  (standard decryption, 1024 connections, block=64)
+  key in global   memory : kernel   1503.70 ms  ->    681.0 decryptions/s
+  key in shared   memory : kernel   1464.19 ms  ->    699.4 decryptions/s
+  key in constant memory : kernel   1473.81 ms  ->    694.8 decryptions/s
+
+[E4] Effect of threads per block (1024 connections)
+  block   32 : standard   1470.42 ms | CRT    180.61 ms
+  block   64 : standard   1471.58 ms | CRT    179.28 ms
+  block  128 : standard   1393.34 ms | CRT    176.22 ms
+  block  256 : standard   1274.65 ms | CRT    256.97 ms
+  block  512 : standard     -1.00 ms | CRT     -1.00 ms   (-1 = block too large for this kernel's register usage)
+
+[E5] Encryption with e = 65537 (4096 connections)
+  GPU kernel 23.16 ms (e2e 37.18 ms) | CPU 1 thread 1297.7 ms | CPU 8 threads 313.9 ms
+
+BENCH COMPLETE - CSV files written to results/

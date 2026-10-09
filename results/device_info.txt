@@ -1,0 +1,10 @@
+GPU            : NVIDIA GeForce MX250 (compute capability 6.1)
+SMs            : 3, max 2048 threads/SM, 65536 regs/SM, warp size 32
+Clock          : 1582 MHz, global memory 2048 MiB, L2 512 KiB, constant 64 KiB, shared/block 48 KiB
+CUDA           : runtime 11.7, driver supports 11.7
+CPU threads    : 8 (OpenMP enabled)
+Kernel resources (block = 64):
+  rsa_modexp_kernel<Global>          regs/thread=209  local(spill)= 512 B  smem=   0 B  maxThr/blk= 256  block=64 -> 4 blocks/SM = 256 threads/SM (occupancy 12.5%), 768 resident threads on GPU
+  rsa_modexp_kernel<Shared>          regs/thread=211  local(spill)= 512 B  smem= 776 B  maxThr/blk= 256  block=64 -> 4 blocks/SM = 256 threads/SM (occupancy 12.5%), 768 resident threads on GPU
+  rsa_modexp_kernel<Constant>        regs/thread=196  local(spill)= 512 B  smem=   0 B  maxThr/blk= 256  block=64 -> 4 blocks/SM = 256 threads/SM (occupancy 12.5%), 768 resident threads on GPU
+  rsa_crt_kernel                     regs/thread=166  local(spill)= 256 B  smem=   0 B  maxThr/blk= 384  block=64 -> 6 blocks/SM = 384 threads/SM (occupancy 18.8%), 1152 resident threads on GPU
